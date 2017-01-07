@@ -29,14 +29,19 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.wearable.complications.ComplicationData;
+import android.support.wearable.complications.ComplicationText;
 import android.support.wearable.watchface.CanvasWatchFaceService;
 import android.support.wearable.watchface.WatchFaceStyle;
+import android.text.TextUtils;
+import android.util.Log;
+import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.WindowInsets;
 
-
 import java.lang.ref.WeakReference;
 import java.util.Calendar;
+import java.util.Locale;
 import java.util.TimeZone;
 import java.util.concurrent.TimeUnit;
 
@@ -45,6 +50,21 @@ import java.util.concurrent.TimeUnit;
  * low-bit ambient mode, the text is drawn without anti-aliasing in ambient mode.
  */
 public class SunshineWatchFace extends CanvasWatchFaceService {
+
+    private static final String TAG = "SunshineWatchFace";
+
+    private static final int TOP_COMPLICATION = 0;
+    private static final int LEFT_COMPLICATION = 1;
+    private static final int MIDDLE_COMPLICATION = 2;
+    private static final int RIGHT_COMPLICATION = 3;
+    public static final int[] COMPLICATION_IDS = {TOP_COMPLICATION, LEFT_COMPLICATION, MIDDLE_COMPLICATION, RIGHT_COMPLICATION};
+    public static final int[][] COMPLICATION_SUPPORTED_TYPES = {
+            {ComplicationData.TYPE_SHORT_TEXT},
+            {ComplicationData.TYPE_SHORT_TEXT, ComplicationData.TYPE_ICON},
+            {ComplicationData.TYPE_SHORT_TEXT, ComplicationData.TYPE_ICON},
+            {ComplicationData.TYPE_SHORT_TEXT, ComplicationData.TYPE_ICON}
+    };
+
     private static final Typeface NORMAL_TYPEFACE =
             Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
 
@@ -107,6 +127,18 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
          */
         boolean mLowBitAmbient;
 
+        /*
+        * Complication stuff
+        * */
+        private Paint mComplicationPaint;
+        private int mTopComplicationY;
+        private int mDialsComplicationsY;
+        private SparseArray<ComplicationData> mActiveComplicationDataSparseArray;
+        private static final float COMPLICATION_TEXT_SIZE = 38f;
+        private int mWidth;
+        private int mHeight;
+
+
         @Override
         public void onCreate(SurfaceHolder holder) {
             super.onCreate(holder);
@@ -126,6 +158,28 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             mTextPaint = createTextPaint(resources.getColor(R.color.digital_text));
 
             mCalendar = Calendar.getInstance();
+
+            initialiseComplications();
+        }
+
+        private void initialiseComplications() {
+            Log.d(TAG, "initialiseComplications()");
+            mActiveComplicationDataSparseArray = new SparseArray<>(COMPLICATION_IDS.length);
+            mComplicationPaint = new Paint();
+            mComplicationPaint.setColor(Color.WHITE);
+            mComplicationPaint.setTextSize(COMPLICATION_TEXT_SIZE);
+            mComplicationPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
+            mComplicationPaint.setAntiAlias(true);
+            setActiveComplications(COMPLICATION_IDS);
+        }
+
+        @Override
+        public void onComplicationDataUpdate(int complicationId, ComplicationData complicationData) {
+            Log.d(TAG, "onComplicationDataUpdate() id: " + complicationId);
+
+            // Adds/updates active complication data in the array.
+            mActiveComplicationDataSparseArray.put(complicationId, complicationData);
+            invalidate();
         }
 
         @Override
@@ -212,6 +266,7 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
                 mAmbient = inAmbientMode;
                 if (mLowBitAmbient) {
                     mTextPaint.setAntiAlias(!inAmbientMode);
+                    mComplicationPaint.setAntiAlias(!inAmbientMode);
                 }
                 invalidate();
             }
@@ -219,6 +274,15 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             // Whether the timer should be running depends on whether we're visible (as well as
             // whether we're in ambient mode), so we may need to start or stop the timer.
             updateTimer();
+        }
+
+        @Override
+        public void onSurfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+            super.onSurfaceChanged(holder, format, width, height);
+            mWidth = width;
+            mHeight = height;
+            mTopComplicationY = (int) ((mHeight / 2) + (mComplicationPaint.getTextSize() / 2));
+            mDialsComplicationsY = (int) (((mHeight / 3)) * 2 + (mComplicationPaint.getTextSize() / 2));
         }
 
         @Override
@@ -235,11 +299,78 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             mCalendar.setTimeInMillis(now);
 
             String text = mAmbient
-                    ? String.format("%d:%02d", mCalendar.get(Calendar.HOUR),
+                    ? String.format(Locale.getDefault(), "%d:%02d", mCalendar.get(Calendar.HOUR),
                     mCalendar.get(Calendar.MINUTE))
-                    : String.format("%d:%02d:%02d", mCalendar.get(Calendar.HOUR),
+                    : String.format(Locale.getDefault(), "%d:%02d:%02d", mCalendar.get(Calendar.HOUR),
                     mCalendar.get(Calendar.MINUTE), mCalendar.get(Calendar.SECOND));
             canvas.drawText(text, mXOffset, mYOffset, mTextPaint);
+
+            drawComplications(canvas, now);
+        }
+
+        private void drawComplications(Canvas canvas, long currentTimeMillis) {
+            ComplicationData complicationData;
+
+            for (int i = 0; i < COMPLICATION_IDS.length; i++) {
+
+                complicationData = mActiveComplicationDataSparseArray.get(COMPLICATION_IDS[i]);
+
+                if ((complicationData != null)
+                        && (complicationData.isActive(currentTimeMillis))) {
+
+                    if (complicationData.getType() == ComplicationData.TYPE_SHORT_TEXT
+                            || complicationData.getType() == ComplicationData.TYPE_NO_PERMISSION) {
+
+                        ComplicationText mainText = complicationData.getShortText();
+                        ComplicationText subText = complicationData.getShortTitle();
+
+                        CharSequence complicationMessage =
+                                mainText.getText(getApplicationContext(), currentTimeMillis);
+
+                        if (subText != null) {
+                            complicationMessage = TextUtils.concat(
+                                    complicationMessage,
+                                    " ",
+                                    subText.getText(getApplicationContext(), currentTimeMillis));
+                        }
+
+                        double textWidth =
+                                mComplicationPaint.measureText(
+                                        complicationMessage,
+                                        0,
+                                        complicationMessage.length());
+
+                        int complicationsX = 0;
+                        int offset;
+                        switch (COMPLICATION_IDS[i]) {
+                            case TOP_COMPLICATION:
+                                complicationsX = (int) (mWidth - textWidth) / 2;
+                                break;
+                            case LEFT_COMPLICATION:
+                                complicationsX = (int) ((mWidth / 3) - textWidth) / 2;
+                                break;
+                            case MIDDLE_COMPLICATION:
+                                offset = (int) ((mWidth / 3) - textWidth) / 2;
+                                complicationsX = (mWidth / 3) + offset;
+                                break;
+                            case RIGHT_COMPLICATION:
+                                offset = (int) ((mWidth / 3) - textWidth) / 2;
+                                complicationsX = (mWidth / 3 * 2) + offset;
+                                break;
+                        }
+
+                        canvas.drawText(
+                                complicationMessage,
+                                0,
+                                complicationMessage.length(),
+                                complicationsX,
+                                COMPLICATION_IDS[i] == TOP_COMPLICATION
+                                        ? mTopComplicationY
+                                        : mDialsComplicationsY,
+                                mComplicationPaint);
+                    }
+                }
+            }
         }
 
         /**

@@ -2,4 +2,6 @@
     <string name="app_name">Sunshine Watch Face</string>
     <string name="message">Watch face tapped</string>
     <string name="my_digital_name">Sunshine Digital</string>
+    <string name="watch_face_config_name">Configurations</string>
+    <string name="data_icon">Data icon</string>
 </resources>

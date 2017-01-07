@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/dark_grey"
+    android:paddingTop="16dp">
+
+    <TextView
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:text="@string/watch_face_config_name"
+        android:textSize="20sp"
+        android:layout_height="wrap_content"/>
+
+    <android.support.wearable.view.WearableListView
+        android:id="@+id/wearable_list"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent">
+    </android.support.wearable.view.WearableListView>
+
+</LinearLayout>
