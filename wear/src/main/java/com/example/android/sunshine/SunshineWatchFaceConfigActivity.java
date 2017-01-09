@@ -1,4 +1,4 @@
-package com.example.android.sunshine.wear;
+package com.example.android.sunshine;
 
 import android.app.Activity;
 import android.content.ComponentName;
@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.example.android.sunshine.wear.R;
 
 import java.util.ArrayList;
 import java.util.List;

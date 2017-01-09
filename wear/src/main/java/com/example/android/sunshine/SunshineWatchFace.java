@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.example.android.sunshine.wear;
+package com.example.android.sunshine;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -39,6 +39,8 @@ import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.WindowInsets;
 
+import com.example.android.sunshine.wear.R;
+
 import java.lang.ref.WeakReference;
 import java.util.Calendar;
 import java.util.Locale;
@@ -60,9 +62,9 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
     public static final int[] COMPLICATION_IDS = {TOP_COMPLICATION, LEFT_COMPLICATION, MIDDLE_COMPLICATION, RIGHT_COMPLICATION};
     public static final int[][] COMPLICATION_SUPPORTED_TYPES = {
             {ComplicationData.TYPE_SHORT_TEXT},
-            {ComplicationData.TYPE_SHORT_TEXT, ComplicationData.TYPE_ICON},
-            {ComplicationData.TYPE_SHORT_TEXT, ComplicationData.TYPE_ICON},
-            {ComplicationData.TYPE_SHORT_TEXT, ComplicationData.TYPE_ICON}
+            {ComplicationData.TYPE_SHORT_TEXT},
+            {ComplicationData.TYPE_SHORT_TEXT},
+            {ComplicationData.TYPE_SHORT_TEXT}
     };
 
     private static final Typeface NORMAL_TYPEFACE =

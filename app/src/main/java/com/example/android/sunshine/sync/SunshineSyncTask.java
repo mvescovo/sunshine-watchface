@@ -18,6 +18,8 @@ package com.example.android.sunshine.sync;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.text.format.DateUtils;
 
 import com.example.android.sunshine.data.SunshinePreferences;
@@ -25,6 +27,7 @@ import com.example.android.sunshine.data.WeatherContract;
 import com.example.android.sunshine.utilities.NetworkUtils;
 import com.example.android.sunshine.utilities.NotificationUtils;
 import com.example.android.sunshine.utilities.OpenWeatherJsonUtils;
+import com.example.android.sunshine.utilities.SunshineWeatherUtils;
 
 import java.net.URL;
 
@@ -65,7 +68,7 @@ public class SunshineSyncTask {
                 /* Get a handle on the ContentResolver to delete and insert data */
                 ContentResolver sunshineContentResolver = context.getContentResolver();
 
-                /* Delete old weather data because we don't need to keep multiple days' data */
+                /* Delete old weather data because we don't need to keep multiple days data */
                 sunshineContentResolver.delete(
                         WeatherContract.WeatherEntry.CONTENT_URI,
                         null,
@@ -103,6 +106,17 @@ public class SunshineSyncTask {
                 if (notificationsEnabled && oneDayPassedSinceLastNotification) {
                     NotificationUtils.notifyUserOfNewWeather(context);
                 }
+
+                /*
+                * Sync data with the wearable.
+                * */
+                Intent intent = new Intent(context, WearableDataSyncService.class);
+                double lowInCelsius = (double)weatherValues[0].get(WeatherContract.WeatherEntry.COLUMN_MIN_TEMP);
+                String lowString = SunshineWeatherUtils.formatTemperature(context, lowInCelsius);
+                Bundle bundle = new Bundle();
+                bundle.putString("minTemp", lowString);
+                intent.putExtra("weatherData", bundle);
+                context.startService(intent);
 
             /* If the code reaches this point, we have successfully performed our sync */
 

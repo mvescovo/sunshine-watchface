@@ -19,19 +19,18 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity
-            android:name=".SunshineWatchFaceConfigActivity">
+        <activity android:name="com.example.android.sunshine.SunshineWatchFaceConfigActivity">
             <intent-filter>
-                <action android:name="com.example.android.wearable.watchface.CONFIG_COMPLICATION"/>
-                <category android:name="com.google.android.wearable.watchface.category.WEARABLE_CONFIGURATION"/>
-                <category android:name="android.intent.category.DEFAULT"/>
+                <action android:name="com.example.android.wearable.watchface.CONFIG_COMPLICATION" />
+                <category android:name="com.google.android.wearable.watchface.category.WEARABLE_CONFIGURATION" />
+                <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
 
-        <activity android:name="android.support.wearable.complications.ComplicationHelperActivity"/>
+        <activity android:name="android.support.wearable.complications.ComplicationHelperActivity" />
 
         <service
-            android:name=".SunshineWatchFace"
+            android:name="com.example.android.sunshine.SunshineWatchFace"
             android:label="@string/my_digital_name"
             android:permission="android.permission.BIND_WALLPAPER">
             <meta-data
@@ -43,10 +42,9 @@
             <meta-data
                 android:name="com.google.android.wearable.watchface.preview_circular"
                 android:resource="@drawable/preview_digital_circular" />
-
             <meta-data
                 android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
-                android:value="com.example.android.wearable.watchface.CONFIG_COMPLICATION"/>
+                android:value="com.example.android.wearable.watchface.CONFIG_COMPLICATION" />
 
             <intent-filter>
                 <action android:name="android.service.wallpaper.WallpaperService" />
@@ -56,20 +54,34 @@
         </service>
 
         <service
-            android:name=".SunshineComplicationProviderService"
-            android:label="@string/complications_provider_min_temp"
+            android:name="com.example.android.sunshine.SunshineComplicationProviderService"
             android:icon="@drawable/ic_watch_white"
+            android:label="@string/complications_provider_min_temp"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
-
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST"/>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+                <!-- listeners receive events that match the action and data filters -->
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
             </intent-filter>
 
-            <meta-data android:name="android.support.wearable.complications.SUPPORTED_TYPES"
-                android:value="SHORT_TEXT"/>
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SHORT_TEXT" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="0" />
+        </service>
 
-            <meta-data android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0"/>
+        <service
+            android:name="com.example.android.sunshine.DataLayerListenerService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+                <data
+                    android:host="*"
+                    android:path="/weather"
+                    android:scheme="wear" />
+            </intent-filter>
         </service>
 
     </application>

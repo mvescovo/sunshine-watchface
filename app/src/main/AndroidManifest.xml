@@ -74,6 +74,12 @@
                 <action android:name="com.firebase.jobdispatcher.ACTION_EXECUTE" />
             </intent-filter>
         </service>
+
+        <service
+            android:name=".sync.WearableDataSyncService"
+            android:enabled="true"
+            android:exported="false"/>
+
     </application>
 
 </manifest>
