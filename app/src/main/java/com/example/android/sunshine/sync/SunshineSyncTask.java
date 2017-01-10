@@ -113,8 +113,11 @@ public class SunshineSyncTask {
                 Intent intent = new Intent(context, WearableDataSyncService.class);
                 double lowInCelsius = (double)weatherValues[0].get(WeatherContract.WeatherEntry.COLUMN_MIN_TEMP);
                 String lowString = SunshineWeatherUtils.formatTemperature(context, lowInCelsius);
+                double highInCelsius = (double)weatherValues[0].get(WeatherContract.WeatherEntry.COLUMN_MAX_TEMP);
+                String highString = SunshineWeatherUtils.formatTemperature(context, highInCelsius);
                 Bundle bundle = new Bundle();
                 bundle.putString("minTemp", lowString);
+                bundle.putString("maxTemp", highString);
                 intent.putExtra("weatherData", bundle);
                 context.startService(intent);
 

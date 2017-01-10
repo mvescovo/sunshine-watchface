@@ -6,23 +6,24 @@ import android.support.wearable.complications.ComplicationProviderService;
 import android.support.wearable.complications.ComplicationText;
 import android.util.Log;
 
-public class SunshineComplicationProviderService extends ComplicationProviderService {
+public class MaxTemperatureProviderService extends ComplicationProviderService {
 
-    private static final String TAG = "SunshineComplicationPro";
-    public static String mData = "";
+    private static final String TAG = "MaxTemperatureProvider";
+    public static String mMaxTemp = "";
 
     @Override
     public void onComplicationUpdate(int complicationId, int dataType, ComplicationManager complicationManager) {
-        Log.d(TAG, "onComplicationUpdate(): " + complicationId);
+        Log.d(TAG, "onComplicationUpdate(): id is " + complicationId);
+        Log.d(TAG, "onComplicationUpdate: max: " + mMaxTemp);
 
-        if (!mData.equals("")) {
-            ComplicationData complicationData = null;
+        ComplicationData complicationData = null;
 
+        if (!mMaxTemp.equals("")) {
             switch (dataType) {
                 case ComplicationData.TYPE_SHORT_TEXT:
                     Log.d(TAG, "TYPE_SHORT_TEXT");
                     complicationData = new ComplicationData.Builder(ComplicationData.TYPE_SHORT_TEXT)
-                            .setShortText(ComplicationText.plainText(mData))
+                            .setShortText(ComplicationText.plainText(mMaxTemp))
                             .build();
                     break;
                 default:
@@ -30,10 +31,10 @@ public class SunshineComplicationProviderService extends ComplicationProviderSer
                         Log.w(TAG, "Unexpected complication type " + dataType);
                     }
             }
+        }
 
-            if (complicationData != null) {
-                complicationManager.updateComplicationData(complicationId, complicationData);
-            }
+        if (complicationData != null) {
+            complicationManager.updateComplicationData(complicationId, complicationData);
         }
     }
 }

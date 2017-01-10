@@ -21,6 +21,8 @@ import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.PutDataRequest;
 import com.google.android.gms.wearable.Wearable;
 
+import java.util.Locale;
+
 public class WearableDataSyncService extends Service
         implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener {
@@ -55,9 +57,14 @@ public class WearableDataSyncService extends Service
             }
 
             if (mGoogleApiClient.isConnected()) {
+                int randomNumber = (int) Math.floor(Math.random() * 10);
+                String randomNumberText = String.format(Locale.getDefault(), "%d!", randomNumber);
                 String minTemp = msg.getData().getString("minTemp");
+                String maxTemp = msg.getData().getString("maxTemp");
                 PutDataMapRequest dataMap = PutDataMapRequest.create("/weather");
+                dataMap.getDataMap().putString("random", randomNumberText);
                 dataMap.getDataMap().putString("minTemp", minTemp);
+                dataMap.getDataMap().putString("maxTemp", maxTemp);
                 PutDataRequest request = dataMap.asPutDataRequest();
                 request.setUrgent();
 

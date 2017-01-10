@@ -1,11 +1,11 @@
 <resources>
-    <string name="app_name">Sunshine Watch Face</string>
+    <string name="app_name">Sunshine</string>
     <string name="message">Watch face tapped</string>
     <string name="my_digital_name">Sunshine Digital</string>
     <string name="watch_face_config_name">Configurations</string>
     <string name="data_icon">Data icon</string>
 
-    <!-- Complications Provider -->
-    <string name="complications_provider_min_temp">Min temp</string>
-    <string name="complications_provider_max_temp">Max temp</string>
+    <!-- Complications Providers -->
+    <string name="complications_provider_min_temperature">Min Temp</string>
+    <string name="complications_provider_max_temperature">Max Temp</string>
 </resources>

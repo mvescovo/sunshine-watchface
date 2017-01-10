@@ -54,13 +54,24 @@
         </service>
 
         <service
-            android:name="com.example.android.sunshine.SunshineComplicationProviderService"
+            android:name="com.example.android.sunshine.DataLayerListenerService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+                <data
+                    android:host="*"
+                    android:path="/weather"
+                    android:scheme="wear" />
+            </intent-filter>
+        </service>
+
+        <service
+            android:name="com.example.android.sunshine.MinTemperatureProviderService"
             android:icon="@drawable/ic_watch_white"
-            android:label="@string/complications_provider_min_temp"
+            android:label="@string/complications_provider_min_temperature"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
                 <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
-                <!-- listeners receive events that match the action and data filters -->
                 <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
             </intent-filter>
 
@@ -73,15 +84,21 @@
         </service>
 
         <service
-            android:name="com.example.android.sunshine.DataLayerListenerService"
-            android:exported="true">
+            android:name="com.example.android.sunshine.MaxTemperatureProviderService"
+            android:icon="@drawable/ic_watch_white"
+            android:label="@string/complications_provider_max_temperature"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
                 <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
-                <data
-                    android:host="*"
-                    android:path="/weather"
-                    android:scheme="wear" />
             </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="SHORT_TEXT" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="0" />
         </service>
 
     </application>

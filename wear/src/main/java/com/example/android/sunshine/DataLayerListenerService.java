@@ -41,10 +41,18 @@ public class DataLayerListenerService extends WearableListenerService {
                 DataMap dataMapItem = DataMapItem.fromDataItem(event.getDataItem()).getDataMap();
                 String path = event.getDataItem().getUri().getPath();
                 if (path.equals("/weather")) {
+                    Log.d(TAG, "onDataChanged: RANDOM: " + dataMapItem.getString("random"));
                     Log.d(TAG, "onDataChanged: MIN TEMP IS: " + dataMapItem.getString("minTemp"));
-                    SunshineComplicationProviderService.mData = dataMapItem.getString("minTemp");
-                    ComponentName componentName = new ComponentName(getApplicationContext(), SunshineComplicationProviderService.class);
+                    Log.d(TAG, "onDataChanged: MAX TEMP IS: " + dataMapItem.getString("maxTemp"));
+
+                    MinTemperatureProviderService.mMinTemp = dataMapItem.getString("minTemp");
+                    ComponentName componentName = new ComponentName(getApplicationContext(), MinTemperatureProviderService.class);
                     ProviderUpdateRequester providerUpdateRequester = new ProviderUpdateRequester(this, componentName);
+                    providerUpdateRequester.requestUpdateAll();
+
+                    MaxTemperatureProviderService.mMaxTemp = dataMapItem.getString("maxTemp");
+                    componentName = new ComponentName(getApplicationContext(), MaxTemperatureProviderService.class);
+                    providerUpdateRequester = new ProviderUpdateRequester(this, componentName);
                     providerUpdateRequester.requestUpdateAll();
                 }
             }
