@@ -118,6 +118,9 @@ public class SunshineSyncTask {
                 Bundle bundle = new Bundle();
                 bundle.putString("minTemp", lowString);
                 bundle.putString("maxTemp", highString);
+                int iconId = SunshineWeatherUtils.getLargeArtResourceIdForWeatherCondition(
+                        (int)weatherValues[0].get(WeatherContract.WeatherEntry.COLUMN_WEATHER_ID));
+                bundle.putInt("iconId", iconId);
                 intent.putExtra("weatherData", bundle);
                 context.startService(intent);
 

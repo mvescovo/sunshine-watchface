@@ -21,11 +21,15 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.Icon;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -62,9 +66,9 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
     public static final int[] COMPLICATION_IDS = {TOP_COMPLICATION, LEFT_COMPLICATION, MIDDLE_COMPLICATION, RIGHT_COMPLICATION};
     public static final int[][] COMPLICATION_SUPPORTED_TYPES = {
             {ComplicationData.TYPE_SHORT_TEXT},
-            {ComplicationData.TYPE_SHORT_TEXT},
-            {ComplicationData.TYPE_SHORT_TEXT},
-            {ComplicationData.TYPE_SHORT_TEXT}
+            {ComplicationData.TYPE_SHORT_TEXT, ComplicationData.TYPE_ICON},
+            {ComplicationData.TYPE_SHORT_TEXT, ComplicationData.TYPE_ICON},
+            {ComplicationData.TYPE_SHORT_TEXT, ComplicationData.TYPE_ICON}
     };
 
     private static final Typeface NORMAL_TYPEFACE =
@@ -313,9 +317,9 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
         private void drawComplications(Canvas canvas, long currentTimeMillis) {
             ComplicationData complicationData;
 
-            for (int i = 0; i < COMPLICATION_IDS.length; i++) {
+            for (int COMPLICATION_ID : COMPLICATION_IDS) {
 
-                complicationData = mActiveComplicationDataSparseArray.get(COMPLICATION_IDS[i]);
+                complicationData = mActiveComplicationDataSparseArray.get(COMPLICATION_ID);
 
                 if ((complicationData != null)
                         && (complicationData.isActive(currentTimeMillis))) {
@@ -336,15 +340,15 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
                                     subText.getText(getApplicationContext(), currentTimeMillis));
                         }
 
-                        double textWidth =
-                                mComplicationPaint.measureText(
-                                        complicationMessage,
-                                        0,
-                                        complicationMessage.length());
+                        double textWidth = mComplicationPaint.measureText(
+                                complicationMessage,
+                                0,
+                                complicationMessage.length()
+                        );
 
                         int complicationsX = 0;
                         int offset;
-                        switch (COMPLICATION_IDS[i]) {
+                        switch (COMPLICATION_ID) {
                             case TOP_COMPLICATION:
                                 complicationsX = (int) (mWidth - textWidth) / 2;
                                 break;
@@ -366,10 +370,34 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
                                 0,
                                 complicationMessage.length(),
                                 complicationsX,
-                                COMPLICATION_IDS[i] == TOP_COMPLICATION
+                                COMPLICATION_ID == TOP_COMPLICATION
                                         ? mTopComplicationY
                                         : mDialsComplicationsY,
                                 mComplicationPaint);
+                    } else if (complicationData.getType() == ComplicationData.TYPE_ICON) {
+                        Icon icon = complicationData.getIcon();
+                        Drawable drawable = icon.loadDrawable(getApplicationContext());
+                        if (drawable instanceof BitmapDrawable) {
+                            Bitmap bitmap;
+                            bitmap = ((BitmapDrawable) drawable).getBitmap();
+                            int complicationsX = 0;
+                            int offset;
+                            switch (COMPLICATION_ID) {
+                                case LEFT_COMPLICATION:
+                                    complicationsX = ((mWidth / 3) - bitmap.getWidth()) / 2;
+                                    break;
+                                case MIDDLE_COMPLICATION:
+                                    offset = ((mWidth / 3) - bitmap.getWidth()) / 2;
+                                    complicationsX = (mWidth / 3) + offset;
+                                    break;
+                                case RIGHT_COMPLICATION:
+                                    offset = ((mWidth / 3) - bitmap.getWidth()) / 2;
+                                    complicationsX = (mWidth / 3 * 2) + offset;
+                                    break;
+                            }
+                            int bitmapY = mDialsComplicationsY - (int) mComplicationPaint.getTextSize();
+                            canvas.drawBitmap(bitmap, complicationsX, bitmapY, null);
+                        }
                     }
                 }
             }

@@ -101,6 +101,24 @@
                 android:value="0" />
         </service>
 
+        <service
+            android:name="com.example.android.sunshine.WeatherIconProviderService"
+            android:icon="@drawable/ic_watch_white"
+            android:label="@string/complications_provider_weather_icon"
+            android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
+            <intent-filter>
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+            </intent-filter>
+
+            <meta-data
+                android:name="android.support.wearable.complications.SUPPORTED_TYPES"
+                android:value="ICON" />
+            <meta-data
+                android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
+                android:value="0" />
+        </service>
+
     </application>
 
 </manifest>

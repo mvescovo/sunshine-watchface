@@ -8,4 +8,5 @@
     <!-- Complications Providers -->
     <string name="complications_provider_min_temperature">Min Temp</string>
     <string name="complications_provider_max_temperature">Max Temp</string>
+    <string name="complications_provider_weather_icon">Weather Icon</string>
 </resources>
