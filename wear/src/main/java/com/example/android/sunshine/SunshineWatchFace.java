@@ -42,7 +42,6 @@ import android.support.wearable.complications.ComplicationText;
 import android.support.wearable.watchface.CanvasWatchFaceService;
 import android.support.wearable.watchface.WatchFaceStyle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.util.SparseArray;
 import android.view.SurfaceHolder;
 import android.view.WindowInsets;
@@ -267,7 +266,6 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
         private void onDrawShortTextComplication(Canvas canvas, int id, ComplicationData data) {
             CharSequence complicationMessage = getComplicationMessage(data);
             configureShortTextComplicationForDrawing(id, complicationMessage);
-            Log.d(TAG, "onDrawShortTextComplication: Y: " + mComplicationY);
             canvas.drawText(complicationMessage, 0, complicationMessage.length(), mComplicationX,
                     mComplicationY, mComplicationsPaint);
         }
@@ -287,7 +285,7 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
         private void configureShortTextComplicationForDrawing(int id, CharSequence complicationMessage) {
             setComplicationTextSize(id);
             setComplicationY(id, false);
-            setComplicationX(id, complicationMessage, null);
+            setTextComplicationX(id, complicationMessage);
         }
 
         private void setComplicationTextSize(int id) {
@@ -326,44 +324,50 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             }
         }
 
-        private void setComplicationX(int id, @Nullable CharSequence complicationMessage,
-                                      @Nullable Bitmap bitmap) {
-            if (complicationMessage != null) {
-                double textWidth = mComplicationsPaint.measureText(complicationMessage, 0,
-                        complicationMessage.length());
-                int offset;
-                switch (id) {
-                    case TOP_COMPLICATION:
-                        mComplicationX = (int) (mSurfaceWidth - textWidth) / 2;
-                        break;
-                    case LEFT_COMPLICATION:
-                        mComplicationX = (int) ((mSurfaceWidth / 3) - textWidth) / 2;
-                        break;
-                    case MIDDLE_COMPLICATION:
-                        offset = (int) ((mSurfaceWidth / 3) - textWidth) / 2;
-                        mComplicationX = (mSurfaceWidth / 3) + offset;
-                        break;
-                    case RIGHT_COMPLICATION:
-                        offset = (int) ((mSurfaceWidth / 3) - textWidth) / 2;
-                        mComplicationX = (mSurfaceWidth / 3 * 2) + offset;
-                        break;
-                }
+        private void setTextComplicationX(int id, CharSequence complicationMessage) {
+            double textWidth = mComplicationsPaint.measureText(complicationMessage, 0,
+                    complicationMessage.length());
+            int offset;
+            switch (id) {
+                case TOP_COMPLICATION:
+                    mComplicationX = (int) (mSurfaceWidth - textWidth) / 2;
+                    break;
+                case LEFT_COMPLICATION:
+                    mComplicationX = mIsRound
+                            ? (int) ((mSurfaceWidth / 3) - textWidth)
+                            : (int) ((mSurfaceWidth / 3) - textWidth) / 2;
+                    break;
+                case MIDDLE_COMPLICATION:
+                    offset = (int) ((mSurfaceWidth / 3) - textWidth) / 2;
+                    mComplicationX = (mSurfaceWidth / 3) + offset;
+                    break;
+                case RIGHT_COMPLICATION:
+                    offset = (int) ((mSurfaceWidth / 3) - textWidth) / 2;
+                    mComplicationX = mIsRound
+                            ? (mSurfaceWidth / 3 * 2)
+                            : (mSurfaceWidth / 3 * 2) + offset;
+                    break;
             }
-            if (bitmap != null) {
-                int offset;
-                switch (id) {
-                    case LEFT_COMPLICATION:
-                        mComplicationX = ((mSurfaceWidth / 3) - bitmap.getWidth()) / 2;
-                        break;
-                    case MIDDLE_COMPLICATION:
-                        offset = ((mSurfaceWidth / 3) - bitmap.getWidth()) / 2;
-                        mComplicationX = (mSurfaceWidth / 3) + offset;
-                        break;
-                    case RIGHT_COMPLICATION:
-                        offset = ((mSurfaceWidth / 3) - bitmap.getWidth()) / 2;
-                        mComplicationX = (mSurfaceWidth / 3 * 2) + offset;
-                        break;
-                }
+        }
+
+        private void setIconComplicationX(int id, Bitmap bitmap) {
+            int offset;
+            switch (id) {
+                case LEFT_COMPLICATION:
+                    mComplicationX = mIsRound
+                            ? ((mSurfaceWidth / 3) - bitmap.getWidth() / 2 * 3)
+                            : ((mSurfaceWidth / 3) - bitmap.getWidth()) / 2;
+                    break;
+                case MIDDLE_COMPLICATION:
+                    offset = ((mSurfaceWidth / 3) - bitmap.getWidth()) / 2;
+                    mComplicationX = (mSurfaceWidth / 3) + offset;
+                    break;
+                case RIGHT_COMPLICATION:
+                    offset = mIsRound
+                            ? ((mSurfaceWidth / 3) - bitmap.getWidth()) / 4
+                            : ((mSurfaceWidth / 3) - bitmap.getWidth()) / 2;
+                    mComplicationX = (mSurfaceWidth / 3 * 2) + offset;
+                    break;
             }
         }
 
@@ -371,7 +375,6 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             Bitmap icon = getComplicationIcon(data);
             if (icon != null) {
                 configureIconComplicationForDrawing(id, icon);
-                Log.d(TAG, "onDrawIconComplication: Y: " + mComplicationY);
                 canvas.drawBitmap(icon, mComplicationX, mComplicationY, null);
             }
         }
@@ -389,7 +392,7 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
 
         private void configureIconComplicationForDrawing(int id, Bitmap bitmap) {
             setComplicationY(id, true);
-            setComplicationX(id, null, bitmap);
+            setIconComplicationX(id, bitmap);
         }
 
         @Override

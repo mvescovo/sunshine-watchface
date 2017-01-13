@@ -3,18 +3,18 @@
 
     <!--Time-->
     <dimen name="digital_time_text_size">40dp</dimen>
-    <dimen name="digital_time_text_size_round">45dp</dimen>
+    <dimen name="digital_time_text_size_round">40dp</dimen>
     <dimen name="digital_time_x_offset">30dp</dimen>
-    <dimen name="digital_time_x_offset_round">32.5dp</dimen>
+    <dimen name="digital_time_x_offset_round">35dp</dimen>
     <dimen name="digital_time_y_offset">70dp</dimen>
     <dimen name="digital_time_y_offset_round">90dp</dimen>
 
     <!--Top complication-->
     <dimen name="digital_top_complication_text_size">10dp</dimen>
-    <dimen name="digital_top_complication_text_size_round">15dp</dimen>
+    <dimen name="digital_top_complication_text_size_round">10dp</dimen>
 
     <!--Dial complications-->
     <dimen name="digital_dial_complication_text_size">20dp</dimen>
-    <dimen name="digital_dial_complication_text_size_round">25dp</dimen>
+    <dimen name="digital_dial_complication_text_size_round">20dp</dimen>
 
 </resources>
