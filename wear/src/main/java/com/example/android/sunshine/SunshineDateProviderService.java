@@ -21,7 +21,7 @@ public class SunshineDateProviderService extends ComplicationProviderService {
         ComplicationData complicationData = null;
 
         switch (dataType) {
-            case ComplicationData.TYPE_SHORT_TEXT:
+            case ComplicationData.TYPE_LONG_TEXT:
                 Log.d(TAG, "TYPE_SHORT_TEXT");
 
                 SimpleDateFormat dateFormat = new SimpleDateFormat("EEEE, d MMMM", Locale.getDefault());
@@ -30,8 +30,8 @@ public class SunshineDateProviderService extends ComplicationProviderService {
                 calendar.setTimeInMillis(now);
                 String date = dateFormat.format(calendar.getTime());
 
-                complicationData = new ComplicationData.Builder(ComplicationData.TYPE_SHORT_TEXT)
-                        .setShortText(ComplicationText.plainText(date))
+                complicationData = new ComplicationData.Builder(ComplicationData.TYPE_LONG_TEXT)
+                        .setLongText(ComplicationText.plainText(date))
                         .build();
                 break;
             default:

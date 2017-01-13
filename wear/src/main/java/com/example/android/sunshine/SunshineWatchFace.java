@@ -70,7 +70,7 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             RIGHT_COMPLICATION
     };
     public static final int[][] COMPLICATION_SUPPORTED_TYPES = {
-            {ComplicationData.TYPE_SHORT_TEXT},
+            {ComplicationData.TYPE_LONG_TEXT, ComplicationData.TYPE_SHORT_TEXT},
             {ComplicationData.TYPE_SHORT_TEXT, ComplicationData.TYPE_ICON},
             {ComplicationData.TYPE_SHORT_TEXT, ComplicationData.TYPE_ICON},
             {ComplicationData.TYPE_SHORT_TEXT, ComplicationData.TYPE_ICON}
@@ -256,6 +256,9 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
                     case ComplicationData.TYPE_NO_PERMISSION:
                         onDrawShortTextComplication(canvas, id, complicationData);
                         break;
+                    case ComplicationData.TYPE_LONG_TEXT:
+                        onDrawLongTextComplication(canvas, id, complicationData);
+                        break;
                     case ComplicationData.TYPE_ICON:
                         onDrawIconComplication(canvas, id, complicationData);
                         break;
@@ -264,13 +267,13 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
         }
 
         private void onDrawShortTextComplication(Canvas canvas, int id, ComplicationData data) {
-            CharSequence complicationMessage = getComplicationMessage(data);
+            CharSequence complicationMessage = getShortComplicationMessage(data);
             configureShortTextComplicationForDrawing(id, complicationMessage);
             canvas.drawText(complicationMessage, 0, complicationMessage.length(), mComplicationX,
                     mComplicationY, mComplicationsPaint);
         }
 
-        private CharSequence getComplicationMessage(ComplicationData data) {
+        private CharSequence getShortComplicationMessage(ComplicationData data) {
             ComplicationText mainText = data.getShortText();
             ComplicationText subText = data.getShortTitle();
             long now = System.currentTimeMillis();
@@ -369,6 +372,31 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
                     mComplicationX = (mSurfaceWidth / 3 * 2) + offset;
                     break;
             }
+        }
+
+        private void onDrawLongTextComplication(Canvas canvas, int id, ComplicationData data) {
+            CharSequence complicationMessage = getLongComplicationMessage(data);
+            configureLongTextComplicationForDrawing(id, complicationMessage);
+            canvas.drawText(complicationMessage, 0, complicationMessage.length(), mComplicationX,
+                    mComplicationY, mComplicationsPaint);
+        }
+
+        private CharSequence getLongComplicationMessage(ComplicationData data) {
+            ComplicationText mainText = data.getLongText();
+            ComplicationText subText = data.getLongTitle();
+            long now = System.currentTimeMillis();
+            CharSequence complicationMessage = mainText.getText(getApplicationContext(), now);
+            if (subText != null) {
+                complicationMessage = TextUtils.concat(complicationMessage, " ",
+                        subText.getText(getApplicationContext(), now));
+            }
+            return complicationMessage;
+        }
+
+        private void configureLongTextComplicationForDrawing(int id, CharSequence complicationMessage) {
+            setComplicationTextSize(id);
+            setComplicationY(id, false);
+            setTextComplicationX(id, complicationMessage);
         }
 
         private void onDrawIconComplication(Canvas canvas, int id, ComplicationData data) {
