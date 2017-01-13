@@ -114,6 +114,7 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
         private boolean mRegisteredTimeZoneReceiver;
         private Paint mBackgroundPaint;
         private Paint mTimePaint;
+        private Paint mDividerPaint;
         private Paint mComplicationsPaint;
         private SparseArray<ComplicationData> mActiveComplicationDataSparseArray;
         private Calendar mCalendar;
@@ -135,6 +136,8 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             mBackgroundPaint.setColor(ContextCompat.getColor(getApplicationContext(), R.color.background));
             mTimePaint = new Paint();
             mTimePaint = createTimePaint(ContextCompat.getColor(getApplicationContext(), R.color.digital_text));
+            mDividerPaint = new Paint();
+            mDividerPaint = createDividerPaint(ContextCompat.getColor(getApplicationContext(), R.color.digital_text));
             mCalendar = Calendar.getInstance();
             initialiseComplications();
         }
@@ -152,6 +155,13 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             timePaint.setTypeface(Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL));
             timePaint.setAntiAlias(true);
             return timePaint;
+        }
+
+        private Paint createDividerPaint(int textColor) {
+            Paint dividerPaint = new Paint();
+            dividerPaint.setColor(textColor);
+            dividerPaint.setAntiAlias(true);
+            return dividerPaint;
         }
 
         private Paint createComplicationsPaint(int textColor) {
@@ -183,6 +193,7 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
                 if (mLowBitAmbient) {
                     boolean antiAlias = !inAmbientMode;
                     mTimePaint.setAntiAlias(antiAlias);
+                    mDividerPaint.setAntiAlias(antiAlias);
                     mComplicationsPaint.setAntiAlias(antiAlias);
                 }
                 invalidate();
@@ -227,6 +238,7 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
                 canvas.drawRect(0, 0, bounds.width(), bounds.height(), mBackgroundPaint);
             }
             onDrawTime(canvas);
+            onDrawDivider(canvas);
             onDrawComplications(canvas);
         }
 
@@ -239,6 +251,15 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
                     : String.format(Locale.getDefault(), "%d:%02d:%02d", mCalendar.get(Calendar.HOUR),
                     mCalendar.get(Calendar.MINUTE), mCalendar.get(Calendar.SECOND));
             canvas.drawText(time, mTimeXOffset, mTimeYOffset, mTimePaint);
+        }
+
+        private void onDrawDivider(Canvas canvas) {
+            float width = canvas.getWidth();
+            float height = canvas.getHeight();
+            float startX = width / 5 * 2;
+            float y = height / 5 * 3;
+            float stopX = width / 5 * 3;
+            canvas.drawLine(startX, y, stopX, y, mDividerPaint);
         }
 
         private void onDrawComplications(Canvas canvas) {
