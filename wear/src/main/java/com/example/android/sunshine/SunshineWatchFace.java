@@ -27,6 +27,8 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
 import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
@@ -450,7 +452,13 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             Bitmap icon = getComplicationIcon(data);
             if (icon != null) {
                 configureIconComplicationForDrawing(id, icon);
-                canvas.drawBitmap(icon, mComplicationX, mComplicationY, null);
+                ColorMatrix matrix = new ColorMatrix();
+                matrix.setSaturation(0);
+                ColorMatrixColorFilter filter = new ColorMatrixColorFilter(matrix);
+                mComplicationsPaint.setColorFilter(filter);
+                canvas.drawBitmap(icon, mComplicationX, mComplicationY, mAmbient
+                        ? mComplicationsPaint
+                        : null);
             }
         }
 
