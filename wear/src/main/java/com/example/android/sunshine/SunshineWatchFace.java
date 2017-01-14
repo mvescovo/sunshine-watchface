@@ -167,7 +167,6 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
         private Paint createComplicationsPaint(int textColor) {
             Paint complicationsPaint = new Paint();
             complicationsPaint.setColor(textColor);
-            complicationsPaint.setTypeface(Typeface.create(Typeface.DEFAULT, Typeface.BOLD));
             complicationsPaint.setAntiAlias(true);
             return complicationsPaint;
         }
@@ -311,6 +310,7 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
 
         private void configureShortTextComplicationForDrawing(int id, CharSequence complicationMessage) {
             setComplicationTextSize(id);
+            setComplicationTypeface(id);
             setComplicationY(id, false);
             setTextComplicationX(id, complicationMessage);
         }
@@ -333,6 +333,21 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
                     break;
             }
             mComplicationsPaint.setTextSize(complicationsTextSize);
+        }
+
+        private void setComplicationTypeface(int id) {
+            Typeface complicationTypeface = Typeface.create(Typeface.DEFAULT, Typeface.NORMAL);
+            switch (id) {
+                case TOP_COMPLICATION:
+                case LEFT_COMPLICATION:
+                case RIGHT_COMPLICATION:
+                    complicationTypeface = Typeface.create(Typeface.SANS_SERIF, Typeface.NORMAL);
+                    break;
+                case MIDDLE_COMPLICATION:
+                    complicationTypeface = Typeface.create(Typeface.SANS_SERIF, Typeface.BOLD);
+                    break;
+            }
+            mComplicationsPaint.setTypeface(complicationTypeface);
         }
 
         private void setComplicationY(int id, boolean isIcon) {
@@ -403,6 +418,7 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
 
         private void configureLongTextComplicationForDrawing(int id, CharSequence complicationMessage) {
             setComplicationTextSize(id);
+            setComplicationTypeface(id);
             setComplicationY(id, false);
             setTextComplicationX(id, complicationMessage);
         }
