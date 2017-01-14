@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
@@ -9,9 +10,9 @@
     <ImageView
         android:id="@+id/icon"
         android:layout_width="wrap_content"
-        android:layout_height="match_parent"
+        android:layout_height="45dp"
         android:contentDescription="@string/data_icon"
-        tools:src="@drawable/complications_top" />
+        tools:src="@drawable/complications_top"/>
 
     <TextView
         android:id="@+id/name"
@@ -19,7 +20,7 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:textColor="@color/white"
-        android:textSize="18sp"
-        tools:text="Top" />
+        android:textSize="16sp"
+        tools:text="Top"/>
 
 </LinearLayout>

@@ -7,9 +7,9 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v7.widget.RecyclerView;
 import android.support.wearable.complications.ComplicationHelperActivity;
-import android.support.wearable.view.WearableListView;
-import android.util.Log;
+import android.support.wearable.view.WearableRecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,40 +21,19 @@ import com.example.android.sunshine.wear.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SunshineWatchFaceConfigActivity extends Activity
-        implements WearableListView.ClickListener {
+public class SunshineWatchFaceConfigActivity extends Activity {
 
     private static final String TAG = "SunshineWatchFaceConfig";
-    private ConfigurationAdapter mAdapter;
-    private WearableListView mWearableConfigListView;
     private static final int PROVIDER_CHOOSER_REQUEST_CODE = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_watch_face_config);
-
-        mAdapter = new ConfigurationAdapter(getApplicationContext(), getComplicationItems());
-
-        mWearableConfigListView = (WearableListView) findViewById(R.id.wearable_list);
-        mWearableConfigListView.setAdapter(mAdapter);
-        mWearableConfigListView.setClickListener(this);
-    }
-
-    @Override
-    public void onClick(WearableListView.ViewHolder viewHolder) {
-        Log.d(TAG, "onClick()");
-
-        Integer tag = (Integer) viewHolder.itemView.getTag();
-        ComplicationItem complicationItem = mAdapter.getItem(tag);
-
-        startActivityForResult(
-                ComplicationHelperActivity.createProviderChooserHelperIntent(
-                        getApplicationContext(),
-                        complicationItem.watchFace,
-                        complicationItem.complicationId,
-                        complicationItem.supportedTypes),
-                PROVIDER_CHOOSER_REQUEST_CODE);
+        Adapter adapter = new Adapter(this, getComplicationItems());
+        WearableRecyclerView wearableRecyclerView = (WearableRecyclerView) findViewById(R.id.recycler_view);
+        wearableRecyclerView.setAdapter(adapter);
+        wearableRecyclerView.setCenterEdgeItems(true);
     }
 
     @Override
@@ -65,11 +44,6 @@ public class SunshineWatchFaceConfigActivity extends Activity
         }
     }
 
-    @Override
-    public void onTopEmptyRegionClick() {
-
-    }
-
     private final class ComplicationItem {
         ComponentName watchFace;
         int complicationId;
@@ -77,8 +51,8 @@ public class SunshineWatchFaceConfigActivity extends Activity
         Drawable icon;
         String title;
 
-        public ComplicationItem(ComponentName watchFace, int complicationId, int[] supportedTypes,
-                                Drawable icon, String title) {
+        ComplicationItem(ComponentName watchFace, int complicationId, int[] supportedTypes,
+                         Drawable icon, String title) {
             this.watchFace = watchFace;
             this.complicationId = complicationId;
             this.supportedTypes = supportedTypes;
@@ -107,49 +81,57 @@ public class SunshineWatchFaceConfigActivity extends Activity
         return items;
     }
 
-    private static class ConfigurationAdapter extends WearableListView.Adapter {
+    private static class Adapter extends WearableRecyclerView.Adapter {
 
         private Context mContext;
         private final LayoutInflater mInflater;
         private List<ComplicationItem> mItems;
 
-
-        public ConfigurationAdapter (Context context, List<ComplicationItem> items) {
+        Adapter(Context context, List<ComplicationItem> items) {
             mContext = context;
             mInflater = LayoutInflater.from(mContext);
             mItems = items;
         }
 
-        // Provides a reference to the type of views you're using
-        public static class ItemViewHolder extends WearableListView.ViewHolder {
+        class ItemViewHolder extends WearableRecyclerView.ViewHolder {
+
             private ImageView iconImageView;
             private TextView textView;
-            public ItemViewHolder(View itemView) {
+
+            ItemViewHolder(View itemView) {
                 super(itemView);
                 iconImageView = (ImageView) itemView.findViewById(R.id.icon);
                 textView = (TextView) itemView.findViewById(R.id.name);
+                itemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Integer tag = (Integer) view.getTag();
+                        ComplicationItem complicationItem = getItem(tag);
+                        ((Activity)mContext).startActivityForResult(
+                                ComplicationHelperActivity.createProviderChooserHelperIntent(
+                                        mContext,
+                                        complicationItem.watchFace,
+                                        complicationItem.complicationId,
+                                        complicationItem.supportedTypes),
+                                PROVIDER_CHOOSER_REQUEST_CODE);
+                    }
+                });
             }
         }
 
         @Override
-        public WearableListView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-
-            // Inflate custom layout for list items.
-            return new ItemViewHolder(
-                    mInflater.inflate(R.layout.activity_watch_face_config_list_item, null));
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            return new Adapter.ItemViewHolder(
+                    mInflater.inflate(R.layout.activity_watch_face_config_list_item, parent, false));
         }
 
         @Override
-        public void onBindViewHolder(WearableListView.ViewHolder holder, int position) {
-
-            ItemViewHolder itemHolder = (ItemViewHolder) holder;
-
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            Adapter.ItemViewHolder itemHolder = (Adapter.ItemViewHolder) holder;
             ImageView imageView = itemHolder.iconImageView;
             imageView.setImageDrawable(mItems.get(position).icon);
-
             TextView textView = itemHolder.textView;
             textView.setText(mItems.get(position).title);
-
             holder.itemView.setTag(position);
         }
 
@@ -158,7 +140,7 @@ public class SunshineWatchFaceConfigActivity extends Activity
             return mItems.size();
         }
 
-        public ComplicationItem getItem(int position) {
+        ComplicationItem getItem(int position) {
             return mItems.get(position);
         }
     }

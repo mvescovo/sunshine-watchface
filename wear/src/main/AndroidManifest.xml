@@ -21,7 +21,6 @@
         <activity android:name="com.example.android.sunshine.SunshineWatchFaceConfigActivity">
             <intent-filter>
                 <action android:name="com.example.android.wearable.watchface.CONFIG_COMPLICATION"/>
-
                 <category android:name="com.google.android.wearable.watchface.category.WEARABLE_CONFIGURATION"/>
                 <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
