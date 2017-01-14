@@ -2,5 +2,4 @@
 <resources>
     <color name="background">#03A9F4</color>
     <color name="digital_text">#ffffff</color>
-    <color name="digital_text_ambient">#bdbdbd</color>
 </resources>
