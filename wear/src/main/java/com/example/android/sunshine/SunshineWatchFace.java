@@ -19,6 +19,7 @@
 package com.example.android.sunshine;
 
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -140,6 +141,19 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             mDividerPaint = createDividerPaint(ContextCompat.getColor(getApplicationContext(), R.color.digital_text));
             mCalendar = Calendar.getInstance();
             initialiseComplications();
+            setDefaultProviders();
+        }
+
+        private void setDefaultProviders() {
+            ComponentName componentName;
+            componentName = new ComponentName(getApplicationContext(), SunshineDateProviderService.class);
+            setDefaultComplicationProvider(TOP_COMPLICATION, componentName, ComplicationData.TYPE_LONG_TEXT);
+            componentName = new ComponentName(getApplicationContext(), WeatherIconProviderService.class);
+            setDefaultComplicationProvider(LEFT_COMPLICATION, componentName, ComplicationData.TYPE_ICON);
+            componentName = new ComponentName(getApplicationContext(), MaxTemperatureProviderService.class);
+            setDefaultComplicationProvider(MIDDLE_COMPLICATION, componentName, ComplicationData.TYPE_SHORT_TEXT);
+            componentName = new ComponentName(getApplicationContext(), MinTemperatureProviderService.class);
+            setDefaultComplicationProvider(RIGHT_COMPLICATION, componentName, ComplicationData.TYPE_SHORT_TEXT);
         }
 
         private void initialiseComplications() {
