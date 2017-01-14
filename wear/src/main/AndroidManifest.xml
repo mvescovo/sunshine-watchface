@@ -64,7 +64,7 @@
         </service>
         <service
             android:name="com.example.android.sunshine.SunshineDateProviderService"
-            android:icon="@drawable/ic_watch_white"
+            android:icon="@drawable/ic_date_white_24dp"
             android:label="@string/complications_provider_sunshine_date"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -81,7 +81,7 @@
         </service>
         <service
             android:name="com.example.android.sunshine.MinTemperatureProviderService"
-            android:icon="@drawable/ic_watch_white"
+            android:icon="@drawable/ic_wb_cloudy_white_24dp"
             android:label="@string/complications_provider_min_temperature"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -98,7 +98,7 @@
         </service>
         <service
             android:name="com.example.android.sunshine.MaxTemperatureProviderService"
-            android:icon="@drawable/ic_watch_white"
+            android:icon="@drawable/ic_wb_sunny_white_24dp"
             android:label="@string/complications_provider_max_temperature"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
@@ -115,7 +115,7 @@
         </service>
         <service
             android:name="com.example.android.sunshine.WeatherIconProviderService"
-            android:icon="@drawable/ic_watch_white"
+            android:icon="@drawable/art_clear"
             android:label="@string/complications_provider_weather_icon"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
