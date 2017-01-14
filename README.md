@@ -2,7 +2,7 @@
 Android Wear app based on the Udacity ud851 Sunshine mobile app.
 
 # Features
-- Supports both sqaure and round watches.
+- Supports both square and round watches.
 - Displays the current time.
 - Uses complications API to display the date, weather icon, max, and min data.
 - Removes colour and dims text in ambient mode, as well as omitting seconds from the time.
