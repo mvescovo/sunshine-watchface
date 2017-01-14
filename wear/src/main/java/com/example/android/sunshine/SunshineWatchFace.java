@@ -104,10 +104,10 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
     private class Engine extends CanvasWatchFaceService.Engine {
         private float mTimeXOffset;
         private float mTimeYOffset;
-        private int mComplicationX;
-        private int mComplicationY;
-        private int mSurfaceWidth;
-        private int mSurfaceHeight;
+        private float mComplicationX;
+        private float mComplicationY;
+        private float mSurfaceWidth;
+        private float mSurfaceHeight;
         private boolean mIsRound;
         private boolean mAmbient;
         private boolean mLowBitAmbient;
@@ -335,7 +335,7 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
         private void setComplicationY(int id, boolean isIcon) {
             switch (id) {
                 case TOP_COMPLICATION:
-                    mComplicationY = (int) ((mSurfaceHeight / 2)
+                    mComplicationY = ((mSurfaceHeight / 2)
                             + (mComplicationsPaint.getTextSize() / 2));
                     break;
                 case LEFT_COMPLICATION:
@@ -343,7 +343,7 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
                 case RIGHT_COMPLICATION:
                     mComplicationY = isIcon
                             ? ((mSurfaceHeight / 3)) * 2
-                            : ((mSurfaceHeight / 3)) * 2 + (int) mComplicationsPaint.getTextSize();
+                            : ((mSurfaceHeight / 3)) * 2 + mComplicationsPaint.getTextSize();
                     break;
             }
         }
@@ -351,22 +351,22 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
         private void setTextComplicationX(int id, CharSequence complicationMessage) {
             double textWidth = mComplicationsPaint.measureText(complicationMessage, 0,
                     complicationMessage.length());
-            int offset;
+            float offset;
             switch (id) {
                 case TOP_COMPLICATION:
-                    mComplicationX = (int) (mSurfaceWidth - textWidth) / 2;
+                    mComplicationX = (float) (mSurfaceWidth - textWidth) / 2;
                     break;
                 case LEFT_COMPLICATION:
                     mComplicationX = mIsRound
-                            ? (int) ((mSurfaceWidth / 3) - textWidth)
-                            : (int) ((mSurfaceWidth / 3) - textWidth) / 2;
+                            ? (float) ((mSurfaceWidth / 3) - textWidth)
+                            : (float) ((mSurfaceWidth / 3) - textWidth) / 2;
                     break;
                 case MIDDLE_COMPLICATION:
-                    offset = (int) ((mSurfaceWidth / 3) - textWidth) / 2;
+                    offset = (float) ((mSurfaceWidth / 3) - textWidth) / 2;
                     mComplicationX = (mSurfaceWidth / 3) + offset;
                     break;
                 case RIGHT_COMPLICATION:
-                    offset = (int) ((mSurfaceWidth / 3) - textWidth) / 2;
+                    offset = (float) ((mSurfaceWidth / 3) - textWidth) / 2;
                     mComplicationX = mIsRound
                             ? (mSurfaceWidth / 3 * 2)
                             : (mSurfaceWidth / 3 * 2) + offset;
@@ -375,22 +375,15 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
         }
 
         private void setIconComplicationX(int id, Bitmap bitmap) {
-            int offset;
             switch (id) {
                 case LEFT_COMPLICATION:
-                    mComplicationX = mIsRound
-                            ? ((mSurfaceWidth / 3) - bitmap.getWidth() / 2 * 3)
-                            : ((mSurfaceWidth / 3) - bitmap.getWidth()) / 2;
+                    mComplicationX = (mSurfaceWidth / 3) - bitmap.getWidth();
                     break;
                 case MIDDLE_COMPLICATION:
-                    offset = ((mSurfaceWidth / 3) - bitmap.getWidth()) / 2;
-                    mComplicationX = (mSurfaceWidth / 3) + offset;
+                    mComplicationX = (mSurfaceWidth / 2) - (bitmap.getWidth() / 2);
                     break;
                 case RIGHT_COMPLICATION:
-                    offset = mIsRound
-                            ? ((mSurfaceWidth / 3) - bitmap.getWidth()) / 4
-                            : ((mSurfaceWidth / 3) - bitmap.getWidth()) / 2;
-                    mComplicationX = (mSurfaceWidth / 3 * 2) + offset;
+                    mComplicationX = (mSurfaceWidth / 3) * 2;
                     break;
             }
         }
