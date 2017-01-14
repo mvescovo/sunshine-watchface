@@ -215,9 +215,6 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             mTimeYOffset = resources.getDimension(mIsRound
                     ? R.dimen.digital_time_y_offset_round
                     : R.dimen.digital_time_y_offset);
-            mTimeXOffset = resources.getDimension(mIsRound
-                    ? R.dimen.digital_time_x_offset_round
-                    : R.dimen.digital_time_x_offset);
             float timeTextSize = resources.getDimension(mIsRound
                     ? R.dimen.digital_time_text_size_round
                     : R.dimen.digital_time_text_size);
@@ -250,7 +247,13 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
                     mCalendar.get(Calendar.MINUTE))
                     : String.format(Locale.getDefault(), "%d:%02d:%02d", mCalendar.get(Calendar.HOUR),
                     mCalendar.get(Calendar.MINUTE), mCalendar.get(Calendar.SECOND));
+            setTimeXOffset(time);
             canvas.drawText(time, mTimeXOffset, mTimeYOffset, mTimePaint);
+        }
+
+        private void setTimeXOffset(String time) {
+            float textWidth = mTimePaint.measureText(time);
+            mTimeXOffset = (mSurfaceWidth / 2) - (textWidth / 2);
         }
 
         private void onDrawDivider(Canvas canvas) {
@@ -351,25 +354,16 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
         private void setTextComplicationX(int id, CharSequence complicationMessage) {
             double textWidth = mComplicationsPaint.measureText(complicationMessage, 0,
                     complicationMessage.length());
-            float offset;
             switch (id) {
                 case TOP_COMPLICATION:
-                    mComplicationX = (float) (mSurfaceWidth - textWidth) / 2;
+                case MIDDLE_COMPLICATION:
+                    mComplicationX = (float) ((mSurfaceWidth / 2) - (textWidth / 2));
                     break;
                 case LEFT_COMPLICATION:
-                    mComplicationX = mIsRound
-                            ? (float) ((mSurfaceWidth / 3) - textWidth)
-                            : (float) ((mSurfaceWidth / 3) - textWidth) / 2;
-                    break;
-                case MIDDLE_COMPLICATION:
-                    offset = (float) ((mSurfaceWidth / 3) - textWidth) / 2;
-                    mComplicationX = (mSurfaceWidth / 3) + offset;
+                    mComplicationX = (float) ((mSurfaceWidth / 3) - textWidth);
                     break;
                 case RIGHT_COMPLICATION:
-                    offset = (float) ((mSurfaceWidth / 3) - textWidth) / 2;
-                    mComplicationX = mIsRound
-                            ? (mSurfaceWidth / 3 * 2)
-                            : (mSurfaceWidth / 3 * 2) + offset;
+                    mComplicationX = (mSurfaceWidth / 3) * 2;
                     break;
             }
         }
