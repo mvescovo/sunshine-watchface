@@ -1,12 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.android.sunshine.wear">
+          package="com.example.android.sunshine.wear">
 
-    <uses-feature android:name="android.hardware.type.watch" />
+    <uses-feature android:name="android.hardware.type.watch"/>
 
     <!-- Required to act as a custom watch face. -->
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-    <uses-permission android:name="com.google.android.wearable.permission.RECEIVE_COMPLICATION_DATA" />
+    <uses-permission android:name="android.permission.WAKE_LOCK"/>
+    <uses-permission android:name="com.google.android.wearable.permission.RECEIVE_COMPLICATION_DATA"/>
 
     <application
         android:allowBackup="true"
@@ -14,20 +14,19 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.DeviceDefault">
-
         <meta-data
             android:name="com.google.android.gms.version"
-            android:value="@integer/google_play_services_version" />
+            android:value="@integer/google_play_services_version"/>
 
         <activity android:name="com.example.android.sunshine.SunshineWatchFaceConfigActivity">
             <intent-filter>
-                <action android:name="com.example.android.wearable.watchface.CONFIG_COMPLICATION" />
-                <category android:name="com.google.android.wearable.watchface.category.WEARABLE_CONFIGURATION" />
-                <category android:name="android.intent.category.DEFAULT" />
+                <action android:name="com.example.android.wearable.watchface.CONFIG_COMPLICATION"/>
+
+                <category android:name="com.google.android.wearable.watchface.category.WEARABLE_CONFIGURATION"/>
+                <category android:name="android.intent.category.DEFAULT"/>
             </intent-filter>
         </activity>
-
-        <activity android:name="android.support.wearable.complications.ComplicationHelperActivity" />
+        <activity android:name="android.support.wearable.complications.ComplicationHelperActivity"/>
 
         <service
             android:name="com.example.android.sunshine.SunshineWatchFace"
@@ -35,108 +34,107 @@
             android:permission="android.permission.BIND_WALLPAPER">
             <meta-data
                 android:name="android.service.wallpaper"
-                android:resource="@xml/watch_face" />
+                android:resource="@xml/watch_face"/>
             <meta-data
                 android:name="com.google.android.wearable.watchface.preview"
-                android:resource="@drawable/preview_digital" />
+                android:resource="@drawable/preview_digital"/>
             <meta-data
                 android:name="com.google.android.wearable.watchface.preview_circular"
-                android:resource="@drawable/preview_digital_circular" />
+                android:resource="@drawable/preview_digital_circular"/>
             <meta-data
                 android:name="com.google.android.wearable.watchface.wearableConfigurationAction"
-                android:value="com.example.android.wearable.watchface.CONFIG_COMPLICATION" />
+                android:value="com.example.android.wearable.watchface.CONFIG_COMPLICATION"/>
 
             <intent-filter>
-                <action android:name="android.service.wallpaper.WallpaperService" />
+                <action android:name="android.service.wallpaper.WallpaperService"/>
 
-                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE" />
+                <category android:name="com.google.android.wearable.watchface.category.WATCH_FACE"/>
             </intent-filter>
         </service>
-
         <service
             android:name="com.example.android.sunshine.DataLayerListenerService"
             android:exported="true">
             <intent-filter>
-                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED"/>
+
                 <data
                     android:host="*"
                     android:path="/weather"
-                    android:scheme="wear" />
+                    android:scheme="wear"/>
             </intent-filter>
         </service>
-
         <service
             android:name="com.example.android.sunshine.SunshineDateProviderService"
             android:icon="@drawable/ic_watch_white"
             android:label="@string/complications_provider_sunshine_date"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
-                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST"/>
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.support.wearable.complications.SUPPORTED_TYPES"
-                android:value="LONG_TEXT" />
+                android:value="LONG_TEXT"/>
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="86400" />
+                android:value="86400"/>
         </service>
-
         <service
             android:name="com.example.android.sunshine.MinTemperatureProviderService"
             android:icon="@drawable/ic_watch_white"
             android:label="@string/complications_provider_min_temperature"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
-                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST"/>
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.support.wearable.complications.SUPPORTED_TYPES"
-                android:value="SHORT_TEXT" />
+                android:value="SHORT_TEXT"/>
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="0"/>
         </service>
-
         <service
             android:name="com.example.android.sunshine.MaxTemperatureProviderService"
             android:icon="@drawable/ic_watch_white"
             android:label="@string/complications_provider_max_temperature"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
-                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST"/>
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.support.wearable.complications.SUPPORTED_TYPES"
-                android:value="SHORT_TEXT" />
+                android:value="SHORT_TEXT"/>
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="0"/>
         </service>
-
         <service
             android:name="com.example.android.sunshine.WeatherIconProviderService"
             android:icon="@drawable/ic_watch_white"
             android:label="@string/complications_provider_weather_icon"
             android:permission="com.google.android.wearable.permission.BIND_COMPLICATION_PROVIDER">
             <intent-filter>
-                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST" />
-                <action android:name="com.google.android.gms.wearable.DATA_CHANGED" />
+                <action android:name="android.support.wearable.complications.ACTION_COMPLICATION_UPDATE_REQUEST"/>
+                <action android:name="com.google.android.gms.wearable.DATA_CHANGED"/>
             </intent-filter>
 
             <meta-data
                 android:name="android.support.wearable.complications.SUPPORTED_TYPES"
-                android:value="ICON" />
+                android:value="ICON"/>
             <meta-data
                 android:name="android.support.wearable.complications.UPDATE_PERIOD_SECONDS"
-                android:value="0" />
+                android:value="0"/>
         </service>
-
+        <service
+            android:name="com.example.android.sunshine.GetWeatherService"
+            android:exported="false">
+        </service>
     </application>
 
 </manifest>

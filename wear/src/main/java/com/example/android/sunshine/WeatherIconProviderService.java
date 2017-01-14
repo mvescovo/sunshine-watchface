@@ -1,5 +1,6 @@
 package com.example.android.sunshine;
 
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.drawable.Icon;
 import android.support.wearable.complications.ComplicationData;
@@ -32,8 +33,9 @@ public class WeatherIconProviderService extends ComplicationProviderService {
                         Log.w(TAG, "Unexpected complication type " + dataType);
                     }
             }
-        } else {
-            Log.d(TAG, "onComplicationUpdate: icon is null");
+        }  else {
+            Intent intent = new Intent(getApplicationContext(), GetWeatherService.class);
+            startService(intent);
         }
 
         if (complicationData != null) {
