@@ -261,6 +261,9 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
                     : String.format(Locale.getDefault(), "%d:%02d:%02d", mCalendar.get(Calendar.HOUR),
                     mCalendar.get(Calendar.MINUTE), mCalendar.get(Calendar.SECOND));
             setTimeXOffset(time);
+            mTimePaint.setColor(ContextCompat.getColor(getApplicationContext(), mAmbient
+                    ? R.color.digital_text_ambient
+                    : R.color.digital_text));
             canvas.drawText(time, mTimeXOffset, mTimeYOffset, mTimePaint);
         }
 
@@ -275,6 +278,9 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
             float startX = width / 5 * 2;
             float y = height / 5 * 3;
             float stopX = width / 5 * 3;
+            mDividerPaint.setColor(ContextCompat.getColor(getApplicationContext(), mAmbient
+                    ? R.color.digital_text_ambient
+                    : R.color.digital_text));
             canvas.drawLine(startX, y, stopX, y, mDividerPaint);
         }
 
@@ -285,6 +291,9 @@ public class SunshineWatchFace extends CanvasWatchFaceService {
         }
 
         private void onDrawComplication(Canvas canvas, int id) {
+            mComplicationsPaint.setColor(ContextCompat.getColor(getApplicationContext(), mAmbient
+                    ? R.color.digital_text_ambient
+                    : R.color.digital_text));
             ComplicationData complicationData = mActiveComplicationDataSparseArray.get(id);
             long now = System.currentTimeMillis();
             if ((complicationData != null) && (complicationData.isActive(now))) {
